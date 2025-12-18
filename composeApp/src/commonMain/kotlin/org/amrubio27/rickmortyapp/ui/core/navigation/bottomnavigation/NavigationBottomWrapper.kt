@@ -10,7 +10,6 @@ import org.amrubio27.rickmortyapp.ui.home.tabs.episodes.EpisodesScreen
 
 @Composable
 fun NavigationBottomWrapper(navController: NavHostController) {
-
     NavHost(navController = navController, startDestination = Routes.Episodes.route) {
         composable(route = Routes.Episodes.route) {
             EpisodesScreen()
@@ -19,5 +18,4 @@ fun NavigationBottomWrapper(navController: NavHostController) {
             CharactersScreen()
         }
     }
-
 }

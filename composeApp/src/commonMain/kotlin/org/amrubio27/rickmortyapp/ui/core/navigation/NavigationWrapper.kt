@@ -14,6 +14,5 @@ fun NavigationWrapper() {
         composable(route = Routes.Home.route) {
             HomeScreen()
         }
-
     }
 }
