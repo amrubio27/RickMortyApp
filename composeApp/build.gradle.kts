@@ -45,6 +45,10 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
 
+            //Viewmodel
+            implementation(libs.viewmodel.compose)
+
+
             // Navigation
             implementation(libs.navigation.compose)
 
