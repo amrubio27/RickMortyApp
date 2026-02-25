@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun EpisodesScreen() {
+    val episodesViewModels = koinViewModel<EpisodesViewModel>()
     Box(
         Modifier
             .fillMaxSize()
