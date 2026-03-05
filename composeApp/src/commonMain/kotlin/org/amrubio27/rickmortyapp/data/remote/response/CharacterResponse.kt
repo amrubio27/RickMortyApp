@@ -8,13 +8,15 @@ import org.amrubio27.rickmortyapp.domain.model.CharacterModel
 data class CharacterResponse(
     @SerialName("id") val parameter: Int,
     val status: String,
-    val image: String
+    val image: String,
+    val name: String
 ) {
     fun toDomain(): CharacterModel {
         return CharacterModel(
             id = parameter,
             isAlive = status.lowercase() == "alive",
-            image = image
+            image = image,
+            name = name
         )
     }
 }
