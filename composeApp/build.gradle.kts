@@ -64,6 +64,12 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor)
 
+            //Paging3
+            //implementation(libs.paging.common)
+            //implementation(libs.paging.compose.common)
+            implementation(libs.androidx.paging.runtime)
+            implementation(libs.androidx.paging.compose)
+
 
         }
         commonTest.dependencies {

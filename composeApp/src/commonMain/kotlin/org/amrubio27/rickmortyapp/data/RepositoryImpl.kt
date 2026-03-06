@@ -1,12 +1,34 @@
 package org.amrubio27.rickmortyapp.data
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
 import org.amrubio27.rickmortyapp.data.remote.ApiService
+import org.amrubio27.rickmortyapp.data.remote.paging.CharacterPagingSource
 import org.amrubio27.rickmortyapp.domain.Repository
 import org.amrubio27.rickmortyapp.domain.model.CharacterModel
 
-class RepositoryImpl(private val api: ApiService) : Repository {
+class RepositoryImpl(
+    private val api: ApiService, private val characterPagingSource: CharacterPagingSource
+) : Repository {
+    companion object {
+        const val MAX_SIZE = 20
+        const val PREFETCH_ITEMS = 5
+    }
+
     override suspend fun getSingleCharacter(id: String): CharacterModel {
         return api.getSingleCharacter(id).toDomain()
 
+    }
+
+    override fun getAllCharacters(): Flow<PagingData<CharacterModel>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = MAX_SIZE,
+                prefetchDistance = PREFETCH_ITEMS
+            ),
+            pagingSourceFactory = { characterPagingSource }
+        ).flow
     }
 }

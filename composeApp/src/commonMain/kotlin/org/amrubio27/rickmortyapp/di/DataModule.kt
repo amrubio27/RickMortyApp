@@ -11,6 +11,7 @@ import org.amrubio27.rickmortyapp.data.RepositoryImpl
 import org.amrubio27.rickmortyapp.data.remote.ApiService
 import org.amrubio27.rickmortyapp.domain.Repository
 import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val dataModule = module {
@@ -20,8 +21,7 @@ val dataModule = module {
                 json(
                     json = Json {
                         ignoreUnknownKeys = true
-                    },
-                    contentType = ContentType.Any
+                    }, contentType = ContentType.Any
                 )
             }
             install(DefaultRequest) {
@@ -34,5 +34,5 @@ val dataModule = module {
         }
     }
     factoryOf(::ApiService)
-    factory<Repository> { RepositoryImpl(get()) }
+    factoryOf(::RepositoryImpl) bind Repository::class
 }
