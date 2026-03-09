@@ -9,8 +9,10 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.amrubio27.rickmortyapp.data.RepositoryImpl
 import org.amrubio27.rickmortyapp.data.remote.ApiService
+import org.amrubio27.rickmortyapp.data.remote.paging.CharactersPagingSource
 import org.amrubio27.rickmortyapp.domain.Repository
 import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val dataModule = module {
@@ -20,19 +22,19 @@ val dataModule = module {
                 json(
                     json = Json {
                         ignoreUnknownKeys = true
-                    },
-                    contentType = ContentType.Any
+                    }, contentType = ContentType.Any
                 )
             }
             install(DefaultRequest) {
                 url {
                     protocol = URLProtocol.HTTPS
                     host = "rickandmortyapi.com"
-                    //parameters.append("key", "value")
+                    parameters.append("key", "")
                 }
             }
         }
     }
     factoryOf(::ApiService)
-    factory<Repository> { RepositoryImpl(get()) }
+    factoryOf(::RepositoryImpl) bind Repository::class
+    factoryOf(::CharactersPagingSource)
 }

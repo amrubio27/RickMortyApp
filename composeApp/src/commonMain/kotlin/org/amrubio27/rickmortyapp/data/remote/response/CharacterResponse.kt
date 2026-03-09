@@ -7,9 +7,9 @@ import org.amrubio27.rickmortyapp.domain.model.CharacterModel
 @Serializable
 data class CharacterResponse(
     @SerialName("id") val parameter: Int,
-    val status: String,
-    val image: String,
-    val name: String
+    @SerialName("status") val status: String,
+    @SerialName("image") val image: String,
+    @SerialName("name") val name: String
 ) {
     fun toDomain(): CharacterModel {
         return CharacterModel(
