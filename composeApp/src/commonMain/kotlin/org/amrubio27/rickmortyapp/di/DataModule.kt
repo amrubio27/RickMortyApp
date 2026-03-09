@@ -29,7 +29,7 @@ val dataModule = module {
                 url {
                     protocol = URLProtocol.HTTPS
                     host = "rickandmortyapi.com"
-                    //parameters.append("key", "value")
+                    parameters.append("key", "")
                 }
             }
         }

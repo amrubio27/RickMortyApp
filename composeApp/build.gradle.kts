@@ -27,26 +27,29 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
-            implementation(compose.preview)
+            implementation(libs.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
 
 
         }
         commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
+            implementation(libs.runtime)
+            implementation(libs.foundation)
+            implementation(libs.material3)
             implementation(libs.material.icons.core)
             implementation(libs.material.icons.extended)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
-            implementation(compose.preview)
+            implementation(libs.ui)
+            implementation(libs.components.resources)
+            implementation(libs.ui.tooling.preview)
+            implementation(libs.ui.tooling.preview)
             implementation(libs.androidx.lifecycle.runtimeCompose)
 
             //Viewmodel
             implementation(libs.viewmodel.compose)
+
+            // Kermit Logging
+            implementation(libs.kermit)
 
 
             // Navigation
@@ -66,8 +69,6 @@ kotlin {
             implementation(libs.coil.network.ktor)
 
             //Paging3
-            //implementation(libs.paging.common)
-            //implementation(libs.paging.compose.common)
             implementation(libs.androidx.paging.runtime)
             implementation(libs.androidx.paging.compose)
 
@@ -110,5 +111,5 @@ android {
 }
 
 dependencies {
-    debugImplementation(compose.uiTooling)
+    debugImplementation(libs.ui.tooling)
 }
