@@ -1,8 +1,12 @@
 package org.amrubio27.rickmortyapp.data.remote.response
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class InfoResponse(
-    val count: Int,
-    val pages: Int,
-    val next: String?,
-    val prev: String?
+    @SerialName("count") val count: Int,
+    @SerialName("pages") val pages: Int,
+    @SerialName("next") val next: String?,
+    @SerialName("prev") val prev: String?
 )

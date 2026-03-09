@@ -5,12 +5,12 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import org.amrubio27.rickmortyapp.data.remote.ApiService
-import org.amrubio27.rickmortyapp.data.remote.paging.CharacterPagingSource
+import org.amrubio27.rickmortyapp.data.remote.paging.CharactersPagingSource
 import org.amrubio27.rickmortyapp.domain.Repository
 import org.amrubio27.rickmortyapp.domain.model.CharacterModel
 
 class RepositoryImpl(
-    private val api: ApiService, private val characterPagingSource: CharacterPagingSource
+    private val api: ApiService, private val characterPagingSource: CharactersPagingSource
 ) : Repository {
     companion object {
         const val MAX_SIZE = 20

@@ -2,11 +2,10 @@ package org.amrubio27.rickmortyapp.data.remote.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import okio.IOException
 import org.amrubio27.rickmortyapp.data.remote.ApiService
 import org.amrubio27.rickmortyapp.domain.model.CharacterModel
 
-class CharacterPagingSource(private val api: ApiService) : PagingSource<Int, CharacterModel>() {
+class CharactersPagingSource(private val api: ApiService) : PagingSource<Int, CharacterModel>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, CharacterModel> {
         return try {
             val page = params.key ?: 1
@@ -22,7 +21,7 @@ class CharacterPagingSource(private val api: ApiService) : PagingSource<Int, Cha
                 nextKey = next
             )
 
-        } catch (exception: IOException) {
+        } catch (exception: Exception) {
             LoadResult.Error(exception)
         }
     }
