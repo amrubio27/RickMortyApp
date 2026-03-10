@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -98,7 +99,8 @@ fun CharacterGridList(characters: LazyPagingItems<CharacterModel>, state: Charac
                     item(
                         span = { GridItemSpan(2) }) {
                         Box(
-                            modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+                            modifier = Modifier.fillMaxWidth().height(100.dp),
+                            contentAlignment = Alignment.Center
                         ) {
                             CircularProgressIndicator(Modifier.size(64.dp), color = Color.Red)
                         }
@@ -149,8 +151,8 @@ fun CharacterOfTheDay(characterModel: CharacterModel? = null) {
             modifier = Modifier.fillMaxWidth().height(400.dp), shape = RoundedCornerShape(12)
         ) {
             if (characterModel == null) {
-                Box(contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
+                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                    CircularProgressIndicator(color = Color.Green)
                 }
             } else {
                 Box(
@@ -179,9 +181,11 @@ fun CharacterOfTheDay(characterModel: CharacterModel? = null) {
                         textAlign = TextAlign.Center,
                         color = Color.White,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.padding(
-                            horizontal = 24.dp, vertical = 16.dp
-                        ).vertical().rotate(-90f)
+                        modifier = Modifier
+                            .padding(horizontal = 24.dp, vertical = 16.dp)
+                            .fillMaxHeight()
+                            .vertical()
+                            .rotate(-90f)
                     )
                 }
             }
