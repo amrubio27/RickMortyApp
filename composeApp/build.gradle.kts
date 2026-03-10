@@ -72,6 +72,9 @@ kotlin {
             implementation(libs.androidx.paging.runtime)
             implementation(libs.androidx.paging.compose)
 
+            //KotlinDateTime
+            implementation(libs.kotlinx.datetime)
+
 
         }
         commonTest.dependencies {

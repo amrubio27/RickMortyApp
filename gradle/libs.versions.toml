@@ -24,9 +24,8 @@ runtime = "1.10.2"
 uiToolingPreview = "1.10.2"
 viewmodel = "2.9.6"
 coil = "3.4.0"
-pagingComposeCommon = "3.3.0"
 kermit = "2.1.0"
-
+kotlinxDatetime = "0.7.1"
 
 
 
@@ -76,6 +75,8 @@ androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.r
 #Logging
 kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 
+#Date KotlinDateTime
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
