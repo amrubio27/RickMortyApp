@@ -6,9 +6,16 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.androidx.room)
+    alias(libs.plugins.ksp)
 }
 
 kotlin {
+
+    sourceSets.commonMain {
+        kotlin.srcDir("build/generated/ksp/metadata")
+    }
+
     androidTarget {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
@@ -30,8 +37,7 @@ kotlin {
             implementation(libs.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.ktor.client.okhttp)
-
-
+            implementation(libs.androidx.room.sqlite.wrapper)
         }
         commonMain.dependencies {
             implementation(libs.runtime)
@@ -69,12 +75,15 @@ kotlin {
             implementation(libs.coil.network.ktor)
 
             //Paging3
-            implementation(libs.androidx.paging.runtime)
+            //implementation(libs.androidx.paging.runtime)
             implementation(libs.androidx.paging.compose)
 
             //KotlinDateTime
             implementation(libs.kotlinx.datetime)
 
+            //Room
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
 
         }
         commonTest.dependencies {
@@ -113,6 +122,13 @@ android {
     }
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 dependencies {
     debugImplementation(libs.ui.tooling)
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
 }
