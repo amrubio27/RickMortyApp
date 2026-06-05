@@ -10,6 +10,7 @@ import org.amrubio27.rickmortyapp.data.remote.ApiService
 import org.amrubio27.rickmortyapp.data.remote.paging.CharactersPagingSource
 import org.amrubio27.rickmortyapp.domain.Repository
 import org.amrubio27.rickmortyapp.domain.model.CharacterModel
+import org.amrubio27.rickmortyapp.domain.model.CharacterOfTheDayModel
 
 class RepositoryImpl(
     private val api: ApiService,
@@ -37,8 +38,11 @@ class RepositoryImpl(
         ).flow
     }
 
-    override suspend fun getCharacterDB() {
-        database.getPreferencesDao().getCharacterOfTheDayDB()
+    override suspend fun getCharacterDB(): CharacterOfTheDayModel? {
+        return database.getPreferencesDao().getCharacterOfTheDayDB()?.toDomain()
+    }
 
+    override suspend fun saveCharacterDB(characterOfTheDayModel: CharacterOfTheDayModel) {
+        database.getPreferencesDao().saveCharacter(characterOfTheDayModel.toEntity())
     }
 }
