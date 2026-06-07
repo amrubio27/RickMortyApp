@@ -64,7 +64,10 @@ fun CharacterGridList(characters: LazyPagingItems<CharacterModel>, state: Charac
     ) {
 
         item(span = { GridItemSpan(2) }) {
-            CharacterOfTheDay(state.characterOfTheDay)
+            Column {
+                Text("Characters", color = Color.Black, fontSize = 24.sp)
+                CharacterOfTheDay(state.characterOfTheDay)
+            }
         }
 
         when {
