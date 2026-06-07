@@ -8,13 +8,16 @@ import kotlinx.coroutines.flow.Flow
 import org.amrubio27.rickmortyapp.data.database.RickMortyDatabase
 import org.amrubio27.rickmortyapp.data.remote.ApiService
 import org.amrubio27.rickmortyapp.data.remote.paging.CharactersPagingSource
+import org.amrubio27.rickmortyapp.data.remote.paging.EpisodesPagingSource
 import org.amrubio27.rickmortyapp.domain.Repository
 import org.amrubio27.rickmortyapp.domain.model.CharacterModel
 import org.amrubio27.rickmortyapp.domain.model.CharacterOfTheDayModel
+import org.amrubio27.rickmortyapp.domain.model.EpisodeModel
 
 class RepositoryImpl(
     private val api: ApiService,
     private val characterPagingSource: CharactersPagingSource,
+    private val episodesPagingSource: EpisodesPagingSource,
     private val database: RickMortyDatabase
 ) : Repository {
     companion object {
@@ -35,6 +38,16 @@ class RepositoryImpl(
                 prefetchDistance = PREFETCH_ITEMS
             ),
             pagingSourceFactory = { characterPagingSource }
+        ).flow
+    }
+
+    override fun getAllEpisodes(): Flow<PagingData<EpisodeModel>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = MAX_SIZE,
+                prefetchDistance = PREFETCH_ITEMS
+            ),
+            pagingSourceFactory = { episodesPagingSource }
         ).flow
     }
 
