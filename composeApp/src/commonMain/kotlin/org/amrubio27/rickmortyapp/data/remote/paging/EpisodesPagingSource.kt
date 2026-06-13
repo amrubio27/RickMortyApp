@@ -15,7 +15,7 @@ class EpisodesPagingSource(private val api: ApiService) : PagingSource<Int, Epis
         return try {
             val page = params.key ?: 1
             val response = api.getAllEpisodes(page)
-            val episodes = response.result
+            val episodes = response.results
 
             val prev = if (page > 1) page - 1 else null
             val next = if (response.info.next != null) page + 1 else null
