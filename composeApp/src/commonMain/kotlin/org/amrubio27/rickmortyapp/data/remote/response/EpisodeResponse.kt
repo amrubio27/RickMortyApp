@@ -25,7 +25,7 @@ data class EpisodeResponse(
             id = id,
             name = name,
             episode = episode,
-            characters = characters.map { url -> url.substringAfter("/") },
+            characters = characters.map { url -> url.substringAfterLast("/") },
             season = season,
             videoUrl = getVideoUrlFromSeason(season)
         )
@@ -33,14 +33,14 @@ data class EpisodeResponse(
 
     private fun getVideoUrlFromSeason(season: SeasonEpisode): String {
         return when (season) {
-            SEASON_1 -> "https://www.youtube.com/watch?v=8BEzj2kRjO8&ab_channel=RottenTomatoesTV"
-            SEASON_2 -> "https://www.youtube.com/watch?v=SXwf_9xJu5c&ab_channel=Yusuto"
-            SEASON_3 -> "https://www.youtube.com/watch?v=Bmg2vXOQ3kM&ab_channel=SeriesTrailerMP"
-            SEASON_4 -> "https://www.youtube.com/watch?v=bLI2-v264No&ab_channel=RottenTomatoesTV"
-            SEASON_5 -> "https://www.youtube.com/watch?v=yC1UxW8vcDo&ab_channel=RottenTomatoesTV"
-            SEASON_6 -> "https://www.youtube.com/watch?v=jerFRSQW9g8&ab_channel=RottenTomatoesTV"
-            SEASON_7 -> "https://www.youtube.com/watch?v=PkZtVBNkmso&ab_channel=RottenTomatoesTV"
-            UNKNOWN -> "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            SEASON_1 -> "https://www.dropbox.com/scl/fi/alc3qlu39x8yal1rd3bps/videoplayback.mp4?rlkey=jmp66oyloqi0gta43nkoq555c&st=2068er1b&raw=1"
+            SEASON_2 -> "https://www.dropbox.com/scl/fi/alc3qlu39x8yal1rd3bps/videoplayback.mp4?rlkey=jmp66oyloqi0gta43nkoq555c&st=2068er1b&raw=1"
+            SEASON_3 -> "https://www.dropbox.com/scl/fi/alc3qlu39x8yal1rd3bps/videoplayback.mp4?rlkey=jmp66oyloqi0gta43nkoq555c&st=2068er1b&raw=1"
+            SEASON_4 -> "https://www.dropbox.com/scl/fi/alc3qlu39x8yal1rd3bps/videoplayback.mp4?rlkey=jmp66oyloqi0gta43nkoq555c&st=2068er1b&raw=1"
+            SEASON_5 -> "https://www.dropbox.com/scl/fi/alc3qlu39x8yal1rd3bps/videoplayback.mp4?rlkey=jmp66oyloqi0gta43nkoq555c&st=2068er1b&raw=1"
+            SEASON_6 -> "https://www.dropbox.com/scl/fi/alc3qlu39x8yal1rd3bps/videoplayback.mp4?rlkey=jmp66oyloqi0gta43nkoq555c&st=2068er1b&raw=1"
+            SEASON_7 -> "https://www.dropbox.com/scl/fi/alc3qlu39x8yal1rd3bps/videoplayback.mp4?rlkey=jmp66oyloqi0gta43nkoq555c&st=2068er1b&raw=1"
+            UNKNOWN -> "https://www.dropbox.com/scl/fi/alc3qlu39x8yal1rd3bps/videoplayback.mp4?rlkey=jmp66oyloqi0gta43nkoq555c&st=2068er1b&raw=1"
         }
     }
 
@@ -48,6 +48,7 @@ data class EpisodeResponse(
         return when {
             episode.startsWith("S01") -> SEASON_1
             episode.startsWith("S02") -> SEASON_2
+            episode.startsWith("S03") -> SEASON_3
             episode.startsWith("S04") -> SEASON_4
             episode.startsWith("S05") -> SEASON_5
             episode.startsWith("S06") -> SEASON_6
