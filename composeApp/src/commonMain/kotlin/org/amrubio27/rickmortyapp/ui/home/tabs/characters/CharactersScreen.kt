@@ -46,16 +46,20 @@ import rickmortyapp.composeapp.generated.resources.Res
 import rickmortyapp.composeapp.generated.resources.rickface
 
 @Composable
-fun CharactersScreen() {
+fun CharactersScreen(navigateToDetail: (CharacterModel) -> Unit) {
     val charactersViewModels = koinViewModel<CharactersViewModel>()
     val state by charactersViewModels.state.collectAsState()
     val characters = state.characters.collectAsLazyPagingItems()
 
-    CharacterGridList(characters, state)
+    CharacterGridList(characters, state, navigateToDetail)
 }
 
 @Composable
-fun CharacterGridList(characters: LazyPagingItems<CharacterModel>, state: CharactersState) {
+fun CharacterGridList(
+    characters: LazyPagingItems<CharacterModel>,
+    state: CharactersState,
+    navigateToDetail: (CharacterModel) -> Unit
+) {
     LazyVerticalGrid(
         modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
         columns = GridCells.Fixed(2),
@@ -94,7 +98,9 @@ fun CharacterGridList(characters: LazyPagingItems<CharacterModel>, state: Charac
                 //Recorremos los items
                 items(characters.itemCount) { index ->
                     characters[index]?.let { characterModel ->
-                        CharacterItemList(characterModel)
+                        CharacterItemList(characterModel) { characterModel ->
+                            navigateToDetail(characterModel)
+                        }
                     }
                 }
 
@@ -115,13 +121,15 @@ fun CharacterGridList(characters: LazyPagingItems<CharacterModel>, state: Charac
 }
 
 @Composable
-fun CharacterItemList(characterModel: CharacterModel) {
+fun CharacterItemList(characterModel: CharacterModel, onItemSelected: (CharacterModel) -> Unit) {
     Box(
         modifier = Modifier.clip(RoundedCornerShape(24.dp))
             .border(2.dp, Color.Green, shape = RoundedCornerShape(0, 24, 0, 0))
             .fillMaxWidth()
             .height(150.dp)
-            .background(Color.White).clickable {}, contentAlignment = Alignment.BottomCenter
+            .background(Color.White).clickable {
+                onItemSelected(characterModel)
+            }, contentAlignment = Alignment.BottomCenter
     ) {
         AsyncImage(
             model = characterModel.image,

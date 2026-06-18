@@ -17,7 +17,7 @@ import org.amrubio27.rickmortyapp.ui.core.navigation.bottomnavigation.BottomBarI
 import org.amrubio27.rickmortyapp.ui.core.navigation.bottomnavigation.NavigationBottomWrapper
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(mainNavController: NavHostController) {
     val items = listOf(
         BottomBarItem.Episodes(),
         BottomBarItem.Characters()
@@ -33,7 +33,7 @@ fun HomeScreen() {
         Box(
             modifier = Modifier.padding(padding)
         ) {
-            NavigationBottomWrapper(navController)
+            NavigationBottomWrapper(navController, mainNavController)
         }
     }
 }
