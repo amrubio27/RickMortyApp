@@ -21,8 +21,12 @@ jobs:
       - name: Obtener Diff de los cambios
         id: get_diff
         run: |
-          git diff origin/main...HEAD > diff.txt
-          git diff origin/main...HEAD --name-only > files.txt
+          # 1. Forzamos a la máquina virtual a traer la información de master
+          git fetch origin master
+          
+          # 2. Ahora ya podemos comparar los cambios sin errores
+          git diff origin/master...HEAD > diff.txt
+          git diff origin/master...HEAD --name-only > files.txt
 
       - name: Generar descripción de la PR con Gemini API
         env:
@@ -95,7 +99,7 @@ jobs:
           
           if [ -z "$PR_EXISTS" ]; then
             gh pr create \
-              --base main \
+              --base master \
               --head "$CURRENT_BRANCH" \
               --title "Refactor: Implementación de componentes en $CURRENT_BRANCH" \
               --body-file pr_description.md
