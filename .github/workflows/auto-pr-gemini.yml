@@ -33,7 +33,7 @@ jobs:
           python3 -c "
           import os, json, urllib.request
 
-          MODEL_NAME = 'gemini-2.0-flash' 
+          MODEL_NAME = 'gemini-3.5-flash' 
 
           try:
               with open('files.txt', 'r') as f: files = f.read()
