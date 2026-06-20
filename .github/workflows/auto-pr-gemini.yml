@@ -28,14 +28,13 @@ jobs:
       - name: Generar descripción de la PR con Gemini API
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          PR_EXAMPLE_TEMPLATE: ${{ secrets.PR_EXAMPLE_TEMPLATE }} # 👈 Inyectamos la plantilla oculta
+          PR_EXAMPLE_TEMPLATE: ${{ secrets.PR_EXAMPLE_TEMPLATE }}
         run: |
           python3 -c "
           import os, json, urllib.request
 
-          MODEL_NAME = 'gemini-3.5-flash' 
+          MODEL_NAME = 'gemini-2.0-flash' 
 
-          # 1. Leer los archivos locales modificados
           try:
               with open('files.txt', 'r') as f: files = f.read()
               with open('diff.txt', 'r') as f: diff = f.read()
@@ -43,13 +42,11 @@ jobs:
               print(f'Error al leer los archivos de diff: {e}')
               exit(1)
 
-          # 2. Leer la plantilla directamente desde el Secret del sistema
           ejemplo = os.environ.get('PR_EXAMPLE_TEMPLATE', '')
           if not ejemplo:
-              print('Error crítico: El Secret PR_EXAMPLE_TEMPLATE está vacío o no configurado.')
+              print('Error crítico: El Secret PR_EXAMPLE_TEMPLATE está vacío.')
               exit(1)
 
-          # 3. Construir el prompt estructurado
           prompt = f'''Actúa como un desarrollador Senior y experto en Clean Architecture.
           Analiza el siguiente 'git diff' y la lista de archivos modificados para redactar una Pull Request extensa, didáctica y técnica centrada en los cambios realizados.
 
@@ -70,11 +67,7 @@ jobs:
           Genera únicamente el Markdown final de la PR para los cambios actuales, sin comentarios adicionales por tu parte.'''
 
           url = f'https://generativelanguage.googleapis.com/v1beta/models/{MODEL_NAME}:generateContent?key={os.environ[\"GEMINI_API_KEY\"]}'
-          payload = {
-              'contents': [{
-                  'parts': [{'text': prompt}]
-              }]
-          }
+          payload = {'contents': [{'parts': [{'text': prompt}]}]}
           
           req = urllib.request.Request(
               url, 
@@ -87,9 +80,23 @@ jobs:
               res_data = json.loads(response.read().decode('utf-8'))
               text = res_data['candidates'][0]['content']['parts'][0]['text']
           
+              # --- PROCESAMIENTO DINÁMICO DEL TÍTULO ---
+              lines = text.strip().split('\n')
+              pr_title = \"Refactor: Cambios en componentes\" # Fallback seguro
+          
+              # Si la primera línea del markdown es el título principal (#), lo extraemos
+              if lines and lines[0].startswith('#'):
+                  pr_title = lines[0].lstrip('#').strip()
+                  # Opcional: removemos esa primera línea del cuerpo para que no aparezca el título duplicado en la descripción
+                  text = '\n'.join(lines[1:]).strip()
+          
+              # Guardamos el título y el cuerpo en archivos independientes
+              with open('pr_title.txt', 'w') as f:
+                  f.write(pr_title)
               with open('pr_description.md', 'w') as f:
                   f.write(text)
-              print('Descripción de PR generada exitosamente por Gemini.')
+          
+              print('Descripción y título de la PR extraídos correctamente.')
           except Exception as e:
               print('Error al invocar la API de Gemini:', e)
               exit(1)
@@ -102,12 +109,17 @@ jobs:
           CURRENT_BRANCH="${{ github.ref_name }}"
           PR_EXISTS=$(gh pr list --head "$CURRENT_BRANCH" --state open --json url --jq '.[].url')
           
+          # Leemos el título generado por la IA desde el archivo
+          GENERATED_TITLE=$(cat pr_title.txt)
+          
           if [ -z "$PR_EXISTS" ]; then
             gh pr create \
               --base master \
               --head "$CURRENT_BRANCH" \
-              --title "Refactor: Implementación de componentes en $CURRENT_BRANCH" \
+              --title "$GENERATED_TITLE" \
               --body-file pr_description.md
           else
-            gh pr edit "$CURRENT_BRANCH" --body-file pr_description.md
+            gh pr edit "$CURRENT_BRANCH" \
+              --title "$GENERATED_TITLE" \
+              --body-file pr_description.md
           fi
