@@ -21,30 +21,35 @@ jobs:
       - name: Obtener Diff de los cambios
         id: get_diff
         run: |
-          # 1. Forzamos a la máquina virtual a traer la información de master
           git fetch origin master
-          
-          # 2. Ahora ya podemos comparar los cambios sin errores
           git diff origin/master...HEAD > diff.txt
           git diff origin/master...HEAD --name-only > files.txt
 
       - name: Generar descripción de la PR con Gemini API
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          PR_EXAMPLE_TEMPLATE: ${{ secrets.PR_EXAMPLE_TEMPLATE }} # 👈 Inyectamos la plantilla oculta
         run: |
           python3 -c "
           import os, json, urllib.request
 
           MODEL_NAME = 'gemini-3.5-flash' 
 
+          # 1. Leer los archivos locales modificados
           try:
               with open('files.txt', 'r') as f: files = f.read()
               with open('diff.txt', 'r') as f: diff = f.read()
-              with open('.github/workflows/ejemplo-pr.md', 'r') as f: ejemplo = f.read()
-          except FileNotFoundError as e:
-              print(f'Error critical: Falta el archivo de ejemplo. {e}')
+          except Exception as e:
+              print(f'Error al leer los archivos de diff: {e}')
               exit(1)
 
+          # 2. Leer la plantilla directamente desde el Secret del sistema
+          ejemplo = os.environ.get('PR_EXAMPLE_TEMPLATE', '')
+          if not ejemplo:
+              print('Error crítico: El Secret PR_EXAMPLE_TEMPLATE está vacío o no configurado.')
+              exit(1)
+
+          # 3. Construir el prompt estructurado
           prompt = f'''Actúa como un desarrollador Senior y experto en Clean Architecture.
           Analiza el siguiente 'git diff' y la lista de archivos modificados para redactar una Pull Request extensa, didáctica y técnica centrada en los cambios realizados.
 
