@@ -6,6 +6,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import org.amrubio27.rickmortyapp.data.remote.response.CharacterResponse
 import org.amrubio27.rickmortyapp.data.remote.response.CharacterWrapperResponse
+import org.amrubio27.rickmortyapp.data.remote.response.EpisodeResponse
 import org.amrubio27.rickmortyapp.data.remote.response.EpisodesWrapperResponse
 
 class ApiService(private val client: HttpClient) {
@@ -23,5 +24,13 @@ class ApiService(private val client: HttpClient) {
         return client.get(urlString = "/api/episode") {
             parameter("page", page)
         }.body()
+    }
+
+    suspend fun getEpisodes(episodes: String): List<EpisodeResponse> {
+        return client.get("/api/episode/$episodes").body()
+    }
+
+    suspend fun getSingleEpisode(episodeId: String): EpisodeResponse {
+        return client.get("/api/episode/$episodeId").body()
     }
 }
