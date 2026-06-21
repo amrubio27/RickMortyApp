@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -41,14 +43,38 @@ fun CharacterDetailScreen(characterModel: CharacterModel) {
         koinViewModel<CharacterDetailViewModel>(parameters = { parameterSetOf(characterModel) })
     val state by characterDetailViewModel.uiState.collectAsState()
 
-    MainHeader(characterModel)
+    Column(
+        modifier = Modifier.statusBarsPadding().fillMaxSize().background(Color.Black)
+    ) {
+        MainHeader(characterModel)
+        CharacterInformation(state.characterModel)
+    }
+}
+
+@Composable
+fun CharacterInformation(characterModel: CharacterModel) {
+    ElevatedCard(modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth()) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text("ABOUT THE CHARACTER")
+            Spacer(Modifier.height(4.dp))
+            InformationDetail("Origin", characterModel.origin)
+            Spacer(Modifier.height(4.dp))
+            InformationDetail("Gender", characterModel.gender)
+        }
+    }
+}
+
+@Composable
+fun InformationDetail(title: String, detail: String) {
+    Row {
+        Text(title, color = Color.Black, fontWeight = FontWeight.Bold)
+        Text(detail, color = Color.Green)
+    }
 }
 
 @Composable
 fun MainHeader(characterModel: CharacterModel) {
-    Column(
-        modifier = Modifier.statusBarsPadding()
-    ) {
+    Column {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
