@@ -13,8 +13,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import org.amrubio27.rickmortyapp.domain.model.CharacterModel
+import org.amrubio27.rickmortyapp.domain.model.EpisodeModel
 import org.amrubio27.rickmortyapp.ui.core.ex.aliveBorder
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -42,13 +46,45 @@ fun CharacterDetailScreen(characterModel: CharacterModel) {
     val characterDetailViewModel =
         koinViewModel<CharacterDetailViewModel>(parameters = { parameterSetOf(characterModel) })
     val state by characterDetailViewModel.uiState.collectAsState()
+    val scrollState = rememberScrollState()
 
     Column(
-        modifier = Modifier.statusBarsPadding().fillMaxSize().background(Color.Black)
+        modifier = Modifier
+            .statusBarsPadding()
+            .fillMaxSize()
+            .background(Color.Black)
+            .verticalScroll(scrollState)
     ) {
         MainHeader(characterModel)
         CharacterInformation(state.characterModel)
+        CharacterEpisodesList(state.episodes)
     }
+}
+
+@Composable
+fun CharacterEpisodesList(episodes: List<EpisodeModel>?) {
+    ElevatedCard(modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth()) {
+        Box(
+            contentAlignment = Alignment.Center
+        ) {
+            if (episodes == null) {
+                CircularProgressIndicator(color = Color.Green)
+            } else {
+                Column {
+                    episodes.forEach { episode ->
+                        EpisodeItem(episode)
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+@Composable
+fun EpisodeItem(episode: EpisodeModel) {
+    Text(episode.name)
+    Text(episode.episode)
 }
 
 @Composable
