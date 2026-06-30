@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
@@ -34,6 +36,13 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import org.amrubio27.rickmortyapp.domain.model.CharacterModel
 import org.amrubio27.rickmortyapp.domain.model.EpisodeModel
+import org.amrubio27.rickmortyapp.ui.core.BackgroundPrimaryColor
+import org.amrubio27.rickmortyapp.ui.core.BackgroundSecondaryColor
+import org.amrubio27.rickmortyapp.ui.core.BackgroundTertiaryColor
+import org.amrubio27.rickmortyapp.ui.core.DefaultTextColor
+import org.amrubio27.rickmortyapp.ui.core.Green
+import org.amrubio27.rickmortyapp.ui.core.Pink
+import org.amrubio27.rickmortyapp.ui.core.components.TextTitle
 import org.amrubio27.rickmortyapp.ui.core.ex.aliveBorder
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -52,27 +61,46 @@ fun CharacterDetailScreen(characterModel: CharacterModel) {
         modifier = Modifier
             .statusBarsPadding()
             .fillMaxSize()
-            .background(Color.Black)
+            .background(BackgroundPrimaryColor)
             .verticalScroll(scrollState)
     ) {
         MainHeader(characterModel)
-        CharacterInformation(state.characterModel)
-        CharacterEpisodesList(state.episodes)
+        Spacer(Modifier.height(16.dp))
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(topStartPercent = 10, topEndPercent = 10))
+                .background(
+                    BackgroundSecondaryColor
+                )
+        ) {
+            CharacterInformation(state.characterModel)
+            CharacterEpisodesList(state.episodes)
+        }
+
     }
 }
 
 @Composable
 fun CharacterEpisodesList(episodes: List<EpisodeModel>?) {
-    ElevatedCard(modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth()) {
+    ElevatedCard(
+        modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth(),
+        colors = CardDefaults.elevatedCardColors().copy(containerColor = BackgroundTertiaryColor)
+    ) {
         Box(
+            modifier = Modifier.padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
             if (episodes == null) {
-                CircularProgressIndicator(color = Color.Green)
+                CircularProgressIndicator(color = Green)
             } else {
                 Column {
+                    TextTitle("Episode list")
+                    Spacer(Modifier.height(6.dp))
                     episodes.forEach { episode ->
                         EpisodeItem(episode)
+                        Spacer(Modifier.height(4.dp))
                     }
                 }
             }
@@ -83,16 +111,19 @@ fun CharacterEpisodesList(episodes: List<EpisodeModel>?) {
 
 @Composable
 fun EpisodeItem(episode: EpisodeModel) {
-    Text(episode.name)
-    Text(episode.episode)
+    Text(episode.name, color = Green, fontWeight = FontWeight.Bold)
+    Text(episode.episode, color = DefaultTextColor)
 }
 
 @Composable
 fun CharacterInformation(characterModel: CharacterModel) {
-    ElevatedCard(modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth()) {
+    ElevatedCard(
+        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+        colors = CardDefaults.elevatedCardColors().copy(containerColor = BackgroundTertiaryColor)
+    ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text("ABOUT THE CHARACTER")
-            Spacer(Modifier.height(4.dp))
+            TextTitle("ABOUT THE CHARACTER")
+            Spacer(Modifier.height(6.dp))
             InformationDetail("Origin", characterModel.origin)
             Spacer(Modifier.height(4.dp))
             InformationDetail("Gender", characterModel.gender)
@@ -103,8 +134,9 @@ fun CharacterInformation(characterModel: CharacterModel) {
 @Composable
 fun InformationDetail(title: String, detail: String) {
     Row {
-        Text(title, color = Color.Black, fontWeight = FontWeight.Bold)
-        Text(detail, color = Color.Green)
+        Text(title, color = DefaultTextColor, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.width(4.dp))
+        Text(detail, color = Green)
     }
 }
 
@@ -147,7 +179,7 @@ fun CharacterHeader(
         ) {
             Text(
                 characterModel.name,
-                color = Color.Black,
+                color = Pink,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -182,7 +214,7 @@ fun CharacterHeader(
                 }
 
                 val aliveCopy = if (characterModel.isAlive) "ALIVE" else "DEAD"
-                val aliveColor = if (characterModel.isAlive) Color.Green else Color.Red
+                val aliveColor = if (characterModel.isAlive) Green else Color.Red
                 Text(
                     aliveCopy,
                     color = Color.White,
